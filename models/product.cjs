@@ -11,6 +11,7 @@ var productSchema = new Schema({
   manufacturer: String,
   image: String,
   createdAt: { type: Date, default: Date.now },
+  quantityInCart: { type: Number, default: 0 },
 });
 
 // Create model for todo

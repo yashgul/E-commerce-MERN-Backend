@@ -10,12 +10,10 @@ router.post("/register", (req, res, next) => {
     .exec()
     .then((user) => {
       if (user.length >= 1) {
-        return res.status(409).json({
-          message: "Each account must have a unique mail",
+        res.status(409).send({
+          error: "Each account must have a unique mail",
         });
       } else {
-        console.log("HMM");
-
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
             console.log(err);
@@ -26,6 +24,9 @@ router.post("/register", (req, res, next) => {
             const user = new User({
               email: req.body.email,
               password: hash,
+              firstName: req.body.firstName,
+              LastName: req.body.lastName,
+              phoneNo: req.body.phoneNo,
             });
 
             console.log(user);

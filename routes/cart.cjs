@@ -4,10 +4,21 @@ const mongoose = require("mongoose");
 const User = require("../models/user.cjs");
 const Product = require("../models/product.cjs");
 const Order = require("../models/order.cjs");
-router.get("/cart", (req, res, next) => {
+
+router.get("/cart/:userid", (req, res, next) => {
   // This will return all the data, exposing only the id and action field to the client
-  User.find({})
-    .then((data) => res.send({ message: "carts retrieved", data: data }))
+  User.findOne({ _id: req.params.userid })
+    .then((data) => {
+      let user = data;
+      console.log(user);
+      let cost = 0;
+      for (let i = 0; i < user.cart.length; i++) {
+        if (user.cart[i].quantity > 0)
+          cost += user.cart[i].quantity * user.cart[i].cost;
+      }
+
+      res.send({ message: "carts retrieved", data: data, cost: cost });
+    })
     .catch(next);
 });
 

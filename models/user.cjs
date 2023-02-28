@@ -8,7 +8,7 @@ const userSchema = new Schema({
   phoneNo: String,
   password: String,
   firstName: String,
-  secondName: String,
+  LastName: String,
   cart: [
     {
       pid: String,
