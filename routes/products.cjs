@@ -5,7 +5,6 @@ const Product = require("../models/product.cjs");
 const User = require("../models/user.cjs");
 
 router.get("/products", (req, res, next) => {
-  // This will return all the data, exposing only the id and action field to the client
   Product.find({})
     .then((data) => res.json(data))
     .catch(next);
