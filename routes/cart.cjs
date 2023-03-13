@@ -124,23 +124,25 @@ router.post("/checkout/:userid", async (req, res) => {
 
     let cost = 0;
 
-    for (prodIndex = 0; prodIndex < products.length; prodIndex++) {
-      let item = cart[cartIndex];
-      let product = products[prodIndex];
+    if (cart.length > 0) {
+      for (prodIndex = 0; prodIndex < products.length; prodIndex++) {
+        let item = cart[cartIndex];
+        let product = products[prodIndex];
 
-      if (item.pid != product._id) {
-        continue;
+        if (item.pid != product._id) {
+          continue;
+        }
+        if (item.quantity > product.quantity) {
+          res.status(400).send({
+            error: `Item ${product.name} only has ${product.quantity} available. Please update your cart.`,
+          });
+          return;
+        }
+        cost += item.cost * item.quantity;
+        cartIndex++;
+        // reduce the item's quantity by the same amount as the cart item
+        products[prodIndex].quantity -= item.quantity;
       }
-      if (item.quantity > product.quantity) {
-        res.status(400).send({
-          error: `Item ${product.name} only has ${product.quantity} available. Please update your cart.`,
-        });
-        return;
-      }
-      cost += item.cost * item.quantity;
-      cartIndex++;
-      // reduce the item's quantity by the same amount as the cart item
-      products[prodIndex].quantity -= item.quantity;
     }
 
     user.cart = [];

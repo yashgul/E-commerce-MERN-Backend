@@ -16,7 +16,7 @@ router.get("/userproducts/:userid", async (req, res, next) => {
     let products = await Product.find({});
 
     let user = await User.findOne({ _id: req.params.userid });
-
+    console.log(user);
     products = products.sort((a, b) => {
       if (a._id > b._id) {
         return -1;
@@ -42,18 +42,19 @@ router.get("/userproducts/:userid", async (req, res, next) => {
 
     let finalproducts = products;
 
-    for (prodIndex = 0; prodIndex < products.length; prodIndex++) {
-      let item = cart[cartIndex];
-      let product = products[prodIndex];
+    if (cart.length !== 0) {
+      for (prodIndex = 0; prodIndex < products.length; prodIndex++) {
+        let item = cart[cartIndex];
+        let product = products[prodIndex];
 
-      if (item.pid != product._id) {
-        continue;
+        if (item?.pid != product._id) {
+          continue;
+        }
+
+        cartIndex++;
+        finalproducts[prodIndex].quantityInCart = item.quantity;
       }
-
-      cartIndex++;
-      finalproducts[prodIndex].quantityInCart = item.quantity;
     }
-
     res.send({ message: "product details sent", data: finalproducts });
   } catch (error) {
     console.log(error);
